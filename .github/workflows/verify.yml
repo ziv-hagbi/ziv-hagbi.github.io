@@ -1,0 +1,45 @@
+# Checks the LIVE site after every GitHub Pages build (and on demand):
+# every page and deep link, assets, metadata, the visitor's path on phone and desktop,
+# the map and navigation links, a privacy scan of what the server returns, and the QR code.
+name: Verify live site
+
+on:
+  page_build:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1" # weekly
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - working-directory: .github/verify
+        run: npm install --no-audit --no-fund && npx playwright install --with-deps chromium
+      - working-directory: .github/verify
+        run: node verify-live.mjs "https://ziv-hagbi.github.io/"
+        env:
+          PUBLISHED_TREE: ${{ github.workspace }}
+      - name: QR code decodes to exactly the live URL, and that URL answers
+        if: hashFiles('qr/ziv-hagbi-memorial-qr-4096.png') != ''
+        run: |
+          pip install --quiet opencv-python-headless zxing-cpp
+          python3 - <<'PY'
+          import cv2, zxingcpp, urllib.request
+          expected = "https://ziv-hagbi.github.io/"
+          img = cv2.imread("qr/ziv-hagbi-memorial-qr-4096.png", cv2.IMREAD_GRAYSCALE)
+          zx = [r.text for r in zxingcpp.read_barcodes(img)]
+          cv, _, _ = cv2.QRCodeDetector().detectAndDecode(cv2.resize(img, (1024, 1024), interpolation=cv2.INTER_AREA))
+          print("zxing:", zx, "opencv:", repr(cv))
+          assert zx == [expected] and cv == expected, "QR does not decode to the canonical URL"
+          with urllib.request.urlopen(expected) as r:
+              body = r.read().decode("utf-8")
+              assert r.status == 200 and "נבנה ועוצב באהבה" in body, "decoded URL did not return the memorial"
+          print("QR → live site OK")
+          PY

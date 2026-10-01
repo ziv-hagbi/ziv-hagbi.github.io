@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://ziv-hagbi.github.io/</loc>
+<changefreq>yearly</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>https://ziv-hagbi.github.io/story/</loc>
+<changefreq>yearly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://ziv-hagbi.github.io/words/</loc>
+<changefreq>yearly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://ziv-hagbi.github.io/memorial/</loc>
+<changefreq>yearly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://ziv-hagbi.github.io/archive/</loc>
+<changefreq>yearly</changefreq>
+<priority>0.6</priority>
+</url>
+</urlset>
