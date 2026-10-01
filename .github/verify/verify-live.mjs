@@ -174,7 +174,9 @@ for (const [name, url, expect] of [
   [
     "OpenStreetMap embed",
     "https://www.openstreetmap.org/export/embed.html?bbox=34.58553%2C31.50146%2C34.59393%2C31.50801&layer=mapnik&marker=31.5047333%2C34.5897333",
-    /31\.5047333/,
+    // The embed page reads bbox/marker from its own URL in the browser (the point is checked on the
+    // site's iframe src above); here we confirm OpenStreetMap serves its real map page for it.
+    /id="map"|OpenStreetMap/,
   ],
   ["Google Maps", "https://www.google.com/maps/search/?api=1&query=31.5047333%2C34.5897333", /31\.5047333/],
   ["Waze", "https://waze.com/ul?ll=31.5047333%2C34.5897333&navigate=yes", /31\.5047333/],
